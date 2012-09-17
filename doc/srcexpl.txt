@@ -1,50 +1,315 @@
-*srcexpl.txt* a Source code Explorer which works like the context window of "Source Insight"
+*srcexpl.txt*	A Source code Explorer which works like the context window of "Source Insight"
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                                                              "
-" Plugin Name: SrcExpl (Source Explorer)                                       "
-" Abstract:    A (G)Vim plugin for exploring the source code based on "tags",  "
-"              and it works like the context window of "Source Insight".       "
-" Authors:     Wenlong Che <wenlong.che@gmail.com>                             "
-"              Jonathan Lai <laiks.jonathan@gmail.com>                         "
-" Homepage:    http://www.vim.org/scripts/script.php?script_id=2179            "
-" GitHub:      https://github.com/wesleyche/SrcExpl                            "
-" Version:     5.0                                                             "
-" Last Change: September 6th, 2012                                             "
-" Licence:     This program is free software; you can redistribute it and / or "
-"              modify it under the terms of the GNU General Public License as  "
-"              published by the Free Software Foundation; either version 2, or "
-"              any later version.                                              "
-"                                                                              "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Version: 5.0
+Author : Wenlong Che <wenlong.che@gmail.com>
+         Jonathan Lai <laiks.jonathan@gmail.com>
+License: GNU General Public License {{{
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" NOTE: Below graph shows my work platform with some Vim plugins,              "
-"       including 'Source Explorer', 'Taglist' and 'NERD tree'. And I usually  "
-"       use my another plugin called 'trinity.vim' to manage them.             "
-"                                                                              "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+}}}
 
-" +----------------------------------------------------------------------------+
-" | File  Edit  Tools  Syntax  Buffers  Window  Help                           |
-" +----------------+-----------------------------------------+-----------------+
-" |-demo.c---------|                                         |-/home/myprj/----|
-" |function        | 1 void foo(void)     /* function 1 */   ||~ src/          |
-" |  foo           | 2 {                                     || `-demo.c       |
-" |  bar           | 3 }                                     |`-tags           |
-" |                | 4 void bar(void)     /* function 2 */   |                 |
-" |~ .----------.  | 5 {                                     |~ .-----------.  |
-" |~ | Tag List |\ | 6 }     .-----------------.             |~ | NERD Tree |\ |
-" |~ .----------. ||~        | The Main Editor |\            |~ .-----------. ||
-" |~ \___________\||~        .-----------------. |           |~ \____________\||
-" |~               |~        \__________________\|           |~                |
-" +-__Tag_List__---+-demo.c----------------------------------+-_NERD_tree_-----+
-" |Source Explorer v5.0           .-----------------.                          |
-" |~                              | Source Explorer |\                         |
-" |~                              .-----------------. |                        |
-" |~                              \__________________\|                        |
-" |-Source_Explorer------------------------------------------------------------|
-" |:TrinityToggleAll                                                           |
-" +----------------------------------------------------------------------------+
+CONTENTS						    *srcexpl-contents*
+    Introduction				    |srcexpl-introduction|
+      Features					      |srcexpl-features|
+    Install					    |srcexpl-install|
+    Interface					    |srcexpl-interface|
+      Commands					      |srcexpl-commands|
+      Variables					      |srcexpl-variables|
+      Key Mappings				      |srcexpl-key-mappings|
+    Examples					    |srcexpl-examples|
+    Tips					    |srcexpl-tips|
+    Changelog					    |srcexpl-changelog|
 
+==============================================================================
+INTRODUCTION						*srcexpl-introduction*
+
+*SrcExpl* is a source code explorer that provides context for the currently
+selected keyword by displaying the function or type definition or declaration
+in a separate window. This plugin aims to recreate the context window available
+in the IDE known as "Source Insight".
+
+The behaviour of the SrcExpl window is similar to that of "Source Insight".
+Placing your cursor on a function name in Normal Mode will cause its definition
+to be displayed in the SrcExpl window. Double-clicking the definition will
+cause the main editor window to jump to the definition. In addition, listing
+multiple definitions and jumping work in a similar fashion to "Source Insight".
+
+SrcExpl uses ctags to track keywords and can automatically create and update
+the generated tags file for you.
+
+SrcExpl is designed to work with other plugins like 'The NERD tree' and
+'taglist' to further recreate a "Source Insight"-like environment or to work
+in your own configuration.
+
+------------------------------------------------------------------------------
+FEATURES						    *srcexpl-features*
+
+    * Display definitions and declarations of various languages supported
+      by ctags and various types including functions, macros, structures,
+      arrays, methods, classes, and variables.
+    * Jump to the displayed context in the SrcExpl window using the mouse or
+      your own key mapping.
+    * Jump back from the context location with the mouse context menu or your
+      own key mapping.
+    * Automatically list all definitions if multiple definitions for a keyword
+      is found.
+    * Automatically create and update the tags file.
+
+==============================================================================
+INSTALL							     *srcexpl-install*
+
+1. Ensure ctags is installed on your system and that VIM can use it.
+2. Place the SrcExpl files in your Vim directory (such as ~/.vim) 
+   or have it installed by a bundle manager like Vundle or NeoBundle.
+3. Open the SrcExpl window with |:SrcExpl| or |:SrcExplToggle| or map these
+   commands to keys in your .vimrc.
+
+							   *srcexpl-uninstall*
+To uninstall SrcExpl, simply delete the SrcExpl files and remove any related
+lines in your .vimrc. You may remove any generated tags files in your projects
+or keep them for further use as they can be used by vim without SrcExpl.
+
+==============================================================================
+INTERFACE						   *srcexpl-interface*
+
+------------------------------------------------------------------------------
+COMMANDS						    *srcexpl-commands*
+
+:SrcExpl							    *:SrcExpl*
+	Opens the SrcExpl window.
+
+:SrcExplClose						       *:SrcExplClose*
+	Closes the SrcExpl window.
+
+:SrcExplToggle						      *:SrcExplToggle*
+	Toggles the SrcExpl window on and off.
+
+------------------------------------------------------------------------------
+VARIABLES						   *srcexpl-variables*
+
+g:SrcExpl_winHeight					 *g:SrcExpl_winHeight*
+	This controls the default height of the SrcExpl window when it is
+	started.
+
+	Default: 8
+
+g:SrcExpl_refreshTime				       *g:SrcExpl_refreshTime*
+	This controls how often in milliseconds the SrcExpl window is updated. 
+        You must keep the cursor on the desired word for this period of time 
+        for SrcExpl to display its definition.
+	Note: This sets the |updatetime| setting which also controls how often
+	the swap file will be written to disk.
+
+	Default: 100
+
+g:SrcExpl_pluginList					*g:SrcExpl_pluginList*
+	This list contains the names of buffers to ignore when displaying
+	context information. At the very minimum it must include itself.
+>
+	" Minimum Plugin List
+	let g:SrcExpl_pluginList = [ "Source_Explorer" ]
+<
+	You should add the name of each buffer every other plugin you have uses
+	to avoid conflicts and compatibility issues.
+>
+	" Example
+	let g:SrcExpl_pluginList = [
+		    \ "__Tag_List__",
+		    \ "NERD_tree_1",
+		    \ "Source_Explorer",
+		    \ "*unite*"
+		    \ ]
+<
+
+	Default: [ "__Tag_List__", "_NERD_tree_", "Source_Explorer" ]
+
+g:SrcExpl_searchLocalDef			    *g:SrcExpl_searchLocalDef*
+	This enables local definition searching. SrcExpl can use vim's local
+	definition search in addition to ctags to find definitions. However,
+	this is not guaranteed to work. See the vim documentation for |gd| for
+	more details.
+
+	Default: 1
+
+g:SrcExpl_isUpdateTags				      *g:SrcExpl_isUpdateTags*
+	This enables automatic tags file updating whenever SrcExpl is opened.
+	If a tags files is not found, you will be asked if you wish to create
+	a tags file in the current directory.
+	The command used to create or update the tags is set by 
+	|g:SrcExpl_updateTagsCmd|.
+
+	Default: 1
+
+g:SrcExpl_updateTagsCmd				     *g:SrcExpl_updateTagsCmd*
+	The command used to create or update the tags file. This is run when
+	SrcExpl is opened if |g:SrcExpl_isUpdateTags| is set or whenever
+	|g:SrcExpl_updateTagsKey| is pressed. The command will run in the
+	current directory.
+
+	Default: "ctags --sort=foldcase -R ."
+
+------------------------------------------------------------------------------
+KEY MAPPINGS						*srcexpl-key-mappings*
+
+g:SrcExpl_jumpKey					   *g:SrcExpl_jumpKey*
+	Set this variable to the key you want to use to jump to the highlighted
+	definition in the SrcExpl window.
+	Note: This mapping only works in the SrcExpl window.
+	Note: SrcExpl uses its own mark list and normal mark commands will not
+	work
+
+	Default: '<CR>'
+
+g:SrcExpl_gobackKey					 *g:SrcExpl_gobackKey*
+	Set this variable to the key you want to use to go back to the previous
+	location after jumping to a definition.
+	Note: SrcExpl uses its own mark list and normal mark commands will not
+	work
+
+	Default: '<SPACE>'
+
+g:SrcExpl_updateTagsKey				     *g:SrcExpl_updateTagsKey*
+	Set this variable to the key you want to use to force a update of the
+	tags file.
+
+	Default: ''
+
+==============================================================================
+EXAMPLES						    *srcexpl-examples*
+>
+ " // The switch of the Source Explorer 
+ nmap <F8> :SrcExplToggle<CR>  
+ 
+ " // Set the height of Source Explorer window 
+ let g:SrcExpl_winHeight = 8 
+ 
+ " // Set 100 ms for refreshing the Source Explorer 
+ let g:SrcExpl_refreshTime = 100 
+ 
+ " // Set "Enter" key to jump into the exact definition context 
+ " let g:SrcExpl_jumpKey = "<ENTER>" 
+ 
+ " // Set "Space" key for back from the definition context 
+ let g:SrcExpl_gobackKey = "<SPACE>" 
+ 
+ " // In order to Avoid conflicts, the Source Explorer should know what plugins 
+ " // are using buffers. And you need add their bufname into the list below 
+ " // according to the command ":buffers!" 
+ let g:SrcExpl_pluginList = [ 
+         \ "__Tag_List__", 
+         \ "_NERD_tree_", 
+         \ "Source_Explorer" 
+     \ ] 
+ 
+ " // Enable/Disable the local definition searching, and note that this is not 
+ " // guaranteed to work, the Source Explorer doesn't check the syntax for now. 
+ " // It only searches for a match with the keyword according to command 'gd' 
+ let g:SrcExpl_searchLocalDef = 1 
+ 
+ " // Do not let the Source Explorer update the tags file when opening 
+ let g:SrcExpl_isUpdateTags = 0 
+ 
+ " // Use 'Exuberant Ctags' with '--sort=foldcase -R .' or '-L cscope.files' to 
+ " //  create/update a tags file 
+ let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ." 
+ 
+ " // Set "<F12>" key for updating the tags file artificially 
+ let g:SrcExpl_updateTagsKey = "<F12>" 
+<
+==============================================================================
+TIPS								*srcexpl-tips*
+
+1. Ensure that there is only one tags file in your project PATH or you SrcExpl
+will show duplicates of every definition.
+For example: There are two tags in the 'your_project' directory, so we will
+delete the excess 'tags' files in the 'sub_directory'.
+>
+ [chewenlong@localhost ~]$ cd your_project/ 
+ [chewenlong@localhost your_project]$ pwd 
+ /home/chewenlong/your_project 
+ [chewenlong@localhost your_project]$ ls 
+ bar.c  sub_directory  tags 
+ [chewenlong@localhost your_project]$ cd sub_directory/ 
+ [chewenlong@localhost sub_directory]$ ls 
+ foo.c  tags 
+ [chewenlong@localhost sub_directory]$ rm -rf tags 
+ [chewenlong@localhost sub_directory]$ ls 
+ foo.c 
+ [chewenlong@localhost sub_directory]$ cd .. 
+ [chewenlong@localhost your_project]$ ls 
+ bar.c  sub_directory  tags 
+ [chewenlong@localhost your_project]$ vim bar.c 
+<
+
+							*srcexpl-line-endings*
+2. Ensure that all the files you are exploring are using unix line endings. If
+they are not, a '^M' will be displayed at the end of the line and SrcExpl will
+jump to incorrect locations.
+
+						    *srcexpl-console-mappings*
+3. If you are using SrcExpl in a UNIX console, these are my suggested key 
+mappings for jumping between windows and using SrcExpl:
+>
+ nmap <C-H> <C-W>h 
+ nmap <C-J> <C-W>j 
+ nmap <C-K> <C-W>k 
+ nmap <C-L> <C-W>l 
+ 
+ nmap <C-I> <C-W>j:call g:SrcExpl_Jump()<CR> 
+ nmap <C-O> :call g:SrcExpl_GoBack()<CR> 
+<
+
+							     *srcexpl-trinity*
+4. If you want to set up vim to work more like Source Insight, you can try a
+vim plugin named Trinity (trinity.vim) available at: 
+http://www.vim.org/scripts/script.php?script_id=2347
+
+The Trinity plugin manages Source Explorer, Taglist and NERD Tree. The below
+shows my work platform with Trinity.
+>
+ +----------------------------------------------------------------------------+
+ | File  Edit  Tools  Syntax  Buffers  Window  Help                           |
+ +----------------+-----------------------------------------+-----------------+
+ |-demo.c---------|                                         |-/home/myprj/----|
+ |function        | 1 void foo(void)     /* function 1 */   ||~ src/          |
+ |  foo           | 2 {                                     || `-demo.c       |
+ |  bar           | 3 }                                     |`-tags           |
+ |                | 4 void bar(void)     /* function 2 */   |                 |
+ |~ .----------.  | 5 {                                     |~ .-----------.  |
+ |~ | Tag List |\ | 6 }     .-----------------.             |~ | NERD Tree |\ |
+ |~ .----------. ||~        | The Main Editor |\            |~ .-----------. ||
+ |~ \___________\||~        .-----------------. |           |~ \____________\||
+ |~               |~        \__________________\|           |~                |
+ +-__Tag_List__---+-demo.c----------------------------------+-_NERD_tree_-----+
+ |Source Explorer v5.0           .-----------------.                          |
+ |~                              | Source Explorer |\                         |
+ |~                              .-----------------. |                        |
+ |~                              \__________________\|                        |
+ |-Source_Explorer------------------------------------------------------------|
+ |:TrinityToggleAll                                                           |
+ +----------------------------------------------------------------------------+
+<
+
+							      *srcexpl-github*
+							 *srcexpl-screenshots*
+5. Screenshots are available at: http://srcexpl.blogspot.com/
+The official git repository is on github at: 
+https://github.com/wesleyche/SrcExpl
+
+==============================================================================
+CHANGELOG						   *srcexpl-changelog*
+
+5.0
+- Replaced use of preview window with a named buffer.
+- Moved to github.
+- Added documentation.
+
+==============================================================================
 vim:tw=78:ts=8:noet:ft=help:
