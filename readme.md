@@ -39,15 +39,15 @@ Screenshots
 
 One Declaration Found
 ---------------------
-![One Declaration Found](http://3.bp.blogspot.com/_-FHYidE7rhE/SLv9-eDUkdI/AAAAAAAAAA0/EWa0qhMln9A/s1600-h/One+definition.bmp)
+![One Declaration Found](http://i.imgur.com/bbGVO.jpg)
 
 Multiple Declarations Found
 ---------------------------
-![Multiple Declarations Found](http://3.bp.blogspot.com/_-FHYidE7rhE/SLv-iX6MVBI/AAAAAAAAAA8/waxJKcy1V3M/s1600-h/Multiple+definitions.bmp)
+![Multiple Declarations Found](http://i.imgur.com/77HeV.jpg)
 
 Local Declaration Found
 -----------------------
-![Local Declaration Found](http://3.bp.blogspot.com/_-FHYidE7rhE/SLv_O5By32I/AAAAAAAAABE/Cw5yx2N29y0/s1600-h/Local+definition.bmp)
+![Local Declaration Found](http://i.imgur.com/dQXqL.jpg)
 
 Settings Example
 ================
