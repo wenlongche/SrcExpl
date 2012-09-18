@@ -1,6 +1,6 @@
 *srcexpl.txt*	A Source code Explorer which works like the context window of "Source Insight"
 
-Version: 5.0
+Version: 5.1
 Author : Wenlong Che <wenlong.che@gmail.com>
          Jonathan Lai <laiks.jonathan@gmail.com>
 License: GNU General Public License {{{
@@ -30,23 +30,24 @@ CONTENTS						    *srcexpl-contents*
 ==============================================================================
 INTRODUCTION						*srcexpl-introduction*
 
-*SrcExpl* is a source code explorer that provides context for the currently
-selected keyword by displaying the function or type definition or declaration
-in a separate window. This plugin aims to recreate the context window available
-in the IDE known as "Source Insight".
+SrcExpl (Source Explorer) is a source code explorer that provides context for
+the currently selected keyword by displaying the function or type definition
+or declaration in a separate window. This plugin aims to recreate the context
+window available in the IDE known as "Source Insight".
 
-The behaviour of the SrcExpl window is similar to that of "Source Insight".
-Placing your cursor on a function name in Normal Mode will cause its definition
-to be displayed in the SrcExpl window. Double-clicking the definition will
-cause the main editor window to jump to the definition. In addition, listing
-multiple definitions and jumping work in a similar fashion to "Source Insight".
+The behaviour of the Source Explorer window is similar to that of "Source
+Insight". Placing your cursor on a function name in Normal Mode will cause its
+definition to be displayed in the Source Explorer window. Double-clicking the
+definition will cause the main editor window to jump to the definition. In
+addition, listing multiple definitions and jumping work in a similar fashion
+to "Source Insight".
 
-SrcExpl uses ctags to track keywords and can automatically create and update
-the generated tags file for you.
+Source Explorer uses ctags to track keywords and can automatically create and
+update the generated tags file for you.
 
-SrcExpl is designed to work with other plugins like 'The NERD tree' and
-'taglist' to further recreate a "Source Insight"-like environment or to work
-in your own configuration.
+Source Explorer is designed to work with other plugins like 'The NERD tree'
+and 'taglist' to further recreate a "Source Insight"-like environment or to
+work in your own configuration.
 
 ------------------------------------------------------------------------------
 FEATURES						    *srcexpl-features*
@@ -54,8 +55,8 @@ FEATURES						    *srcexpl-features*
     * Display definitions and declarations of various languages supported
       by ctags and various types including functions, macros, structures,
       arrays, methods, classes, and variables.
-    * Jump to the displayed context in the SrcExpl window using the mouse or
-      your own key mapping.
+    * Jump to the displayed context in the Source Explorer window using the
+    * mouse or your own key mapping.
     * Jump back from the context location with the mouse context menu or your
       own key mapping.
     * Automatically list all definitions if multiple definitions for a keyword
@@ -66,15 +67,16 @@ FEATURES						    *srcexpl-features*
 INSTALL							     *srcexpl-install*
 
 1. Ensure ctags is installed on your system and that VIM can use it.
-2. Place the SrcExpl files in your Vim directory (such as ~/.vim) 
-   or have it installed by a bundle manager like Vundle or NeoBundle.
-3. Open the SrcExpl window with |:SrcExpl| or |:SrcExplToggle| or map these
-   commands to keys in your .vimrc.
+2. Place the Source Explorer files in your Vim directory (such as ~/.vim) or
+have it installed by a bundle manager like Vundle or NeoBundle.
+3. Open the Source Explorer window with |:SrcExpl| or |:SrcExplToggle| or map
+these commands to keys in your .vimrc.
 
 							   *srcexpl-uninstall*
-To uninstall SrcExpl, simply delete the SrcExpl files and remove any related
-lines in your .vimrc. You may remove any generated tags files in your projects
-or keep them for further use as they can be used by vim without SrcExpl.
+To uninstall Source Explorer, simply delete the Source Explorer files and
+remove any related lines in your .vimrc. You may remove any generated tags
+files in your projects or keep them for further use as they can be used by vim
+without Source Explorer.
 
 ==============================================================================
 INTERFACE						   *srcexpl-interface*
@@ -83,25 +85,26 @@ INTERFACE						   *srcexpl-interface*
 COMMANDS						    *srcexpl-commands*
 
 :SrcExpl							    *:SrcExpl*
-	Opens the SrcExpl window.
+	Opens the Source Explorer window.
 
 :SrcExplClose						       *:SrcExplClose*
-	Closes the SrcExpl window.
+	Closes the Source Explorer window.
 
 :SrcExplToggle						      *:SrcExplToggle*
-	Toggles the SrcExpl window on and off.
+	Toggles the Source Explorer window on and off.
 
 ------------------------------------------------------------------------------
 VARIABLES						   *srcexpl-variables*
 
 g:SrcExpl_winHeight					 *g:SrcExpl_winHeight*
-	This controls the default height of the SrcExpl window when it is
-	started.
+	This controls the default height of the Source Explorer window when it
+	is started.
 
 	Default: 8
 
 g:SrcExpl_refreshTime				       *g:SrcExpl_refreshTime*
-	This controls how often in milliseconds the SrcExpl window is updated. 
+	This controls how often in milliseconds the Source Explorer window is
+	updated.
         You must keep the cursor on the desired word for this period of time 
         for SrcExpl to display its definition.
 	Note: This sets the |updatetime| setting which also controls how often
@@ -131,15 +134,16 @@ g:SrcExpl_pluginList					*g:SrcExpl_pluginList*
 	Default: [ "__Tag_List__", "_NERD_tree_", "Source_Explorer" ]
 
 g:SrcExpl_searchLocalDef			    *g:SrcExpl_searchLocalDef*
-	This enables local definition searching. SrcExpl can use vim's local
-	definition search in addition to ctags to find definitions. However,
-	this is not guaranteed to work. See the vim documentation for |gd| for
-	more details.
+	This enables local definition searching. Source Explorer can use vim's
+	local definition search in addition to ctags to find definitions.
+	However, this is not guaranteed to work. See the vim documentation for
+	|gd| for more details.
 
 	Default: 1
 
 g:SrcExpl_isUpdateTags				      *g:SrcExpl_isUpdateTags*
-	This enables automatic tags file updating whenever SrcExpl is opened.
+	This enables automatic tags file updating whenever Source Explorer is
+	opened.
 	If a tags files is not found, you will be asked if you wish to create
 	a tags file in the current directory.
 	The command used to create or update the tags is set by 
@@ -149,9 +153,9 @@ g:SrcExpl_isUpdateTags				      *g:SrcExpl_isUpdateTags*
 
 g:SrcExpl_updateTagsCmd				     *g:SrcExpl_updateTagsCmd*
 	The command used to create or update the tags file. This is run when
-	SrcExpl is opened if |g:SrcExpl_isUpdateTags| is set or whenever
-	|g:SrcExpl_updateTagsKey| is pressed. The command will run in the
-	current directory.
+	Source Explorer is opened if |g:SrcExpl_isUpdateTags| is set or
+	whenever |g:SrcExpl_updateTagsKey| is pressed. The command will run in
+	the current directory.
 
 	Default: "ctags --sort=foldcase -R ."
 
@@ -160,18 +164,18 @@ KEY MAPPINGS						*srcexpl-key-mappings*
 
 g:SrcExpl_jumpKey					   *g:SrcExpl_jumpKey*
 	Set this variable to the key you want to use to jump to the highlighted
-	definition in the SrcExpl window.
-	Note: This mapping only works in the SrcExpl window.
-	Note: SrcExpl uses its own mark list and normal mark commands will not
-	work
+	definition in the Source Explorer window.
+	Note: This mapping only works in the Source Explorer window.
+	Note: Source Explorer uses its own mark list and normal mark commands
+	will not work.
 
 	Default: '<CR>'
 
 g:SrcExpl_gobackKey					 *g:SrcExpl_gobackKey*
 	Set this variable to the key you want to use to go back to the previous
 	location after jumping to a definition.
-	Note: SrcExpl uses its own mark list and normal mark commands will not
-	work
+	Note: Source Explorer uses its own mark list and normal mark commands
+	will not work.
 
 	Default: '<SPACE>'
 
@@ -226,8 +230,8 @@ EXAMPLES						    *srcexpl-examples*
 ==============================================================================
 TIPS								*srcexpl-tips*
 
-1. Ensure that there is only one tags file in your project PATH or you SrcExpl
-will show duplicates of every definition.
+1. Ensure that there is only one tags file in your project PATH or you Source
+Explorer will show duplicates of every definition.
 For example: There are two tags in the 'your_project' directory, so we will
 delete the excess 'tags' files in the 'sub_directory'.
 >
@@ -250,12 +254,12 @@ delete the excess 'tags' files in the 'sub_directory'.
 
 							*srcexpl-line-endings*
 2. Ensure that all the files you are exploring are using unix line endings. If
-they are not, a '^M' will be displayed at the end of the line and SrcExpl will
-jump to incorrect locations.
+they are not, a '^M' will be displayed at the end of the line and Source
+Explorer will jump to incorrect locations.
 
 						    *srcexpl-console-mappings*
-3. If you are using SrcExpl in a UNIX console, these are my suggested key 
-mappings for jumping between windows and using SrcExpl:
+3. If you are using Source Explorer in a UNIX console, these are my suggested
+key mappings for jumping between windows and using Source Explorer:
 >
  nmap <C-H> <C-W>h 
  nmap <C-J> <C-W>j 
@@ -288,7 +292,7 @@ shows my work platform with Trinity.
  |~ \___________\||~        .-----------------. |           |~ \____________\||
  |~               |~        \__________________\|           |~                |
  +-__Tag_List__---+-demo.c----------------------------------+-_NERD_tree_-----+
- |Source Explorer v5.0           .-----------------.                          |
+ |Source Explorer v5.1           .-----------------.                          |
  |~                              | Source Explorer |\                         |
  |~                              .-----------------. |                        |
  |~                              \__________________\|                        |
@@ -310,6 +314,14 @@ CHANGELOG						   *srcexpl-changelog*
 - Replaced use of preview window with a named buffer.
 - Moved to github.
 - Added documentation.
+
+5.1
+- Added two APIs for serving other plugins:
+    1. SrcExpl_GetWin(), getting the Source Explorer window number for those
+    plugins based on multiple windows.
+    2. SrcExpl_GetVer(), getting the Source Explorer version for the forward
+    compatibility.
+- Added debug/logging functions for the internal development.
 
 ==============================================================================
 vim:tw=78:ts=8:noet:ft=help:

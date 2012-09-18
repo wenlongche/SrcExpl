@@ -1,7 +1,7 @@
 **SrcExpl**
 ===========
 
-SrcExpl is a source code explorer that provides context for the currently
+SrcExpl (Source Explorer) is a source code explorer that provides context for the currently
 selected keyword by displaying the function or type definition or declaration
 in a separate window. This plugin aims to recreate the context window available
 in the IDE known as "Source Insight".
@@ -12,7 +12,7 @@ Features
 * Display definitions and declarations of various languages supported
       by ctags and various types including functions, macros, structures,
       arrays, methods, classes, and variables.
-* Jump to the displayed context in the SrcExpl window using the mouse or
+* Jump to the displayed context in the Source Explorer window using the mouse or
       your own key mapping.
 * Jump back from the context location with the mouse context menu or your
       own key mapping.
@@ -23,14 +23,14 @@ Features
 Installation
 ============
 1. Ensure ctags is installed on your system and that VIM can use it.
-2. Place the SrcExpl files in your Vim directory (such as ~/.vim) 
+2. Place the Source Explorer files in your Vim directory (such as ~/.vim) 
    or have it installed by a bundle manager like Vundle or NeoBundle.
-3. Open the SrcExpl window with *:SrcExpl* or *:SrcExplToggle* or map these
+3. Open the Source Explorer window with *:SrcExpl* or *:SrcExplToggle* or map these
    commands to keys in your .vimrc.
 
 Requirements
 ------------
-SrcExpl requires:
+Source Explorer requires:
 * Vim 7.0 or higher
 * ctags
 
@@ -98,3 +98,11 @@ Changelog
 - Replaced use of preview window with a named buffer.
 - Moved to github.
 - Added documentation.
+
+5.1
+- Added two APIs for serving other plugins:
+    1. SrcExpl_GetWin(), getting the Source Explorer window number for those
+    plugins based on multiple windows.
+    2. SrcExpl_GetVer(), getting the Source Explorer version for the forward
+    compatibility.
+- Added debug/logging functions for the internal development.
