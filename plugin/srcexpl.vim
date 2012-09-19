@@ -517,7 +517,8 @@ function! <SID>SrcExpl_WinNew(wincmd)
     let srcexpl_win = winnr("$")
     call setwinvar(srcexpl_win, s:SrcExpl_winName, 1)
     let s:SrcExpl_Window = srcexpl_win
-    exe 'set ' . 'winfixheight'
+    " Keep the height of Source Explorer window although it could be resized
+    exe 'set winfixheight'
     return 1
 
 endfunction "  }}}
