@@ -38,9 +38,9 @@ window available in the IDE known as "Source Insight".
 The behaviour of the Source Explorer window is similar to that of "Source
 Insight". Placing your cursor on a function name in Normal Mode will cause its
 definition to be displayed in the Source Explorer window. Double-clicking the
-definition will cause the main editor window to jump to the definition. In
-addition, listing multiple definitions and jumping work in a similar fashion
-to "Source Insight".
+definition will cause the edit window to jump to the definition. In addition,
+listing multiple definitions and jumping work in a similar fashion to
+"Source Insight".
 
 Source Explorer uses ctags to track keywords and can automatically create and
 update the generated tags file for you.
@@ -287,10 +287,10 @@ shows my work platform with Trinity.
  |  bar           | 3 }                                     |`-tags           |
  |                | 4 void bar(void)     /* function 2 */   |                 |
  |~ .----------.  | 5 {                                     |~ .-----------.  |
- |~ | Tag List |\ | 6 }     .-----------------.             |~ | NERD Tree |\ |
- |~ .----------. ||~        | The Main Editor |\            |~ .-----------. ||
- |~ \___________\||~        .-----------------. |           |~ \____________\||
- |~               |~        \__________________\|           |~                |
+ |~ | Tag List |\ | 6 }        .-------------.              |~ | NERD Tree |\ |
+ |~ .----------. ||~           | Edit Window |\             |~ .-----------. ||
+ |~ \___________\||~           .-------------. |            |~ \____________\||
+ |~               |~           \______________\|            |~                |
  +-__Tag_List__---+-demo.c----------------------------------+-_NERD_tree_-----+
  |Source Explorer v5.1           .-----------------.                          |
  |~                              | Source Explorer |\                         |

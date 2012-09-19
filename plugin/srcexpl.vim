@@ -8,7 +8,7 @@
 "              Jonathan Lai <laiks.jonathan@gmail.com>                         "
 " Homepage:    http://www.vim.org/scripts/script.php?script_id=2179            "
 " GitHub:      https://github.com/wesleyche/SrcExpl                            "
-" Version:     5.0                                                             "
+" Version:     5.1                                                             "
 " Last Change: September 16th, 2012                                            "
 " Licence:     This program is free software; you can redistribute it and / or "
 "              modify it under the terms of the GNU General Public License as  "
@@ -33,12 +33,12 @@
 " |  bar           | 3 }                                     |`-tags           |
 " |                | 4 void bar(void)     /* function 2 */   |                 |
 " |~ .----------.  | 5 {                                     |~ .-----------.  |
-" |~ | Tag List |\ | 6 }     .-----------------.             |~ | NERD Tree |\ |
-" |~ .----------. ||~        | The Main Editor |\            |~ .-----------. ||
-" |~ \___________\||~        .-----------------. |           |~ \____________\||
-" |~               |~        \__________________\|           |~                |
+" |~ | Tag List |\ | 6 }        .-------------.              |~ | NERD Tree |\ |
+" |~ .----------. ||~           | Edit Window |\             |~ .-----------. ||
+" |~ \___________\||~           .-------------. |            |~ \____________\||
+" |~               |~           \______________\|            |~                |
 " +-__Tag_List__---+-demo.c----------------------------------+-_NERD_tree_-----+
-" |Source Explorer v5.0           .-----------------.                          |
+" |Source Explorer v5.1           .-----------------.                          |
 " |~                              | Source Explorer |\                         |
 " |~                              .-----------------. |                        |
 " |~                              \__________________\|                        |
@@ -200,7 +200,7 @@ let g:SrcExpl_markList = []
 let s:SrcExpl_pluginName = 'Source Explorer'
 
 " Plugin version
-let s:SrcExpl_pluginVer = 5.0
+let s:SrcExpl_pluginVer = 5.1
 
 " Buffer name
 let s:SrcExpl_bufName = 'Source_Explorer'
@@ -336,11 +336,11 @@ endfunction " }}}
 
 " SrcExpl_GoBack() {{{
 
-" Move the cursor to the previous location in the mark history
+" Move the cursor to the previous location according to the mark history
 
 function! g:SrcExpl_GoBack()
 
-    " If or not the cursor is on the main editor window
+    " If the cursor is not in the edit window
     if <SID>SrcExpl_WinActive() || <SID>SrcExpl_AdaptPlugins()
         return -1
     endif
@@ -352,7 +352,7 @@ endfunction " }}}
 
 " SrcExpl_Jump() {{{
 
-" Jump to the main editor window and point to the definition
+" Jump to the edit window and point to the definition
 
 function! g:SrcExpl_Jump()
 
@@ -377,10 +377,10 @@ function! g:SrcExpl_Jump()
     endif
 
     if g:SrcExpl_searchLocalDef != 0
-        " We have already jumped to the main editor window
+        " We have already jumped to the edit window
         let s:SrcExpl_isJumped = 1
     endif
-    " Indeed go back to the main editor window
+    " Indeed go back to the edit window
     silent! exe s:SrcExpl_editWin . "wincmd w"
     " Set the mark for recording the current position
     call <SID>SrcExpl_SetMarkList()
@@ -394,7 +394,7 @@ function! g:SrcExpl_Jump()
         return 0
     endif
 
-    " Open the buffer using main editor window
+    " Open the buffer using edit window
     exe "edit " . s:SrcExpl_currMark[0]
     " Jump to the context line of that symbol
     call cursor(s:SrcExpl_currMark[1], s:SrcExpl_currMark[2])
@@ -428,7 +428,7 @@ function! g:SrcExpl_Refresh()
         return -1
     endif
 
-    " If or not the cursor is on the main editor window
+    " If the cursor is not in the edit window
     if <SID>SrcExpl_WinActive() || <SID>SrcExpl_AdaptPlugins()
         return -2
     endif
@@ -439,7 +439,7 @@ function! g:SrcExpl_Refresh()
         return -3
     endif
 
-    " Get the ID of main editor window
+    " Get the edit window number
     let s:SrcExpl_editWin = winnr()
 
     " Get the symbol under the cursor
@@ -514,11 +514,10 @@ function! <SID>SrcExpl_WinNew(wincmd)
     endif
 
     exe 'silent! botright ' . string(g:SrcExpl_winHeight) . 'split ' . a:wincmd
-
     let srcexpl_win = winnr("$")
     call setwinvar(srcexpl_win, s:SrcExpl_winName, 1)
-
     let s:SrcExpl_Window = srcexpl_win
+    exe 'set ' . 'winfixheight'
     return 1
 
 endfunction "  }}}
@@ -607,7 +606,7 @@ function! <SID>SrcExpl_WinPrompt(prompt)
         $ d _
         " Make it unmodifiable again
         setlocal nomodifiable
-        " Go back to the main editor window
+        " Go back to the edit window
         silent! exe s:SrcExpl_editWin . "wincmd w"
     endif
 
@@ -661,7 +660,7 @@ function! <SID>SrcExpl_WinEnter()
             \ ":call g:SrcExpl_Jump()<CR>"
             exe "nunmap " . g:SrcExpl_jumpKey
         endif
-    " In the main editor window
+    " In the edit window
     else
         if has("gui_running")
             " You can use SrcExplGoBack item in Popup menu
@@ -705,41 +704,14 @@ endfunction " }}}
 
 function! <SID>SrcExpl_WinOpen()
 
-    " Get the ID of main editor window
+    " Get the edit window number
     let s:SrcExpl_editWin = winnr()
+
     " Get the tab page number
     let s:SrcExpl_tabPage = tabpagenr()
 
-    " Has the Source Explorer existed already?
-    let l:bufnum = bufnr(s:SrcExpl_bufName)
-    " Not existed, create a new buffer
-    if l:bufnum == -1
-        " Create a new buffer
-        let l:wcmd = s:SrcExpl_bufName
-    else
-        " Edit the existing buffer
-        let l:wcmd = '+buffer' . l:bufnum
-    endif
-
-    " Has the Source Explorer window existed already?
-    let l:winnum = g:SrcExpl_GetWin()
-    " Reopen the Source Explorer idle window
-    call <SID>SrcExpl_WinEdit(l:wcmd)
     " Prompt the plugin name and its version
     call <SID>SrcExpl_WinPrompt(s:SrcExpl_pluginName . ' v' . string(s:SrcExpl_pluginVer))
-
-    " Open successfully and jump to it indeed
-    if <SID>SrcExpl_WinActive()
-        " Put it on the bottom of (G)Vim if new window
-        if l:winnum == -1
-            silent! wincmd J
-            silent! exe "res " . g:SrcExpl_winHeight
-            silent! exe "set " . "winfixheight"
-        endif
-    endif
-
-    " Indeed go back to the main editor window
-    silent! exe s:SrcExpl_editWin . "wincmd w"
 
 endfunction " }}}
 
@@ -811,7 +783,7 @@ function! <SID>SrcExpl_GetMarkList()
         return <SID>SrcExpl_GetMarkList()
     endif
 
-    " Load the buffer content into the main editor window
+    " Load the buffer content into the edit window
     exe "edit " . get(g:SrcExpl_markList, -1)[0]
     " Jump to the context position of that symbol
     call cursor(get(g:SrcExpl_markList, -1)[1], get(g:SrcExpl_markList, -1)[2])
@@ -871,7 +843,7 @@ function! <SID>SrcExpl_SelToJump()
         let l:index += 1
     endwhile
 
-    " Indeed go back to the main editor window
+    " Indeed go back to the edit window
     silent! exe s:SrcExpl_editWin . "wincmd w"
     " Open the file containing the definition context
     exe "edit " . l:fpath
@@ -1017,7 +989,7 @@ function! <SID>SrcExpl_ListMultiDefs(list, len)
     exe "normal! " . "gg"
     " Back to the first line
     setlocal nomodifiable
-    " Go back to the main editor window
+    " Go back to the edit window
     silent! exe s:SrcExpl_editWin . "wincmd w"
 
 endfunction " }}}
@@ -1065,7 +1037,7 @@ function! <SID>SrcExpl_ViewOneDef(fpath, excmd)
         " Resotre the original setting for the highlight
         let &hlsearch = l:hlsearch
 
-        " Go back to the main editor window
+        " Go back to the edit window
         silent! exe s:SrcExpl_editWin . "wincmd w"
     endif
 
@@ -1147,7 +1119,7 @@ function! <SID>SrcExpl_GoDecl(expr)
         call <SID>SrcExpl_SetCurrMark()
         " Refresh all the screen
         redraw
-        " Go back to the main editor window
+        " Go back to the edit window
         silent! exe s:SrcExpl_editWin . "wincmd w"
         " We got a local definition
         let s:SrcExpl_status = 3
@@ -1178,7 +1150,7 @@ function! <SID>SrcExpl_GetSymbol()
             if g:SrcExpl_searchLocalDef == 0
                 return -1
             else
-                " Do not refresh when jumping to the main editor window
+                " Do not refresh when jumping to the edit window
                 if s:SrcExpl_isJumped == 1
                     " Get the cursor line number
                     let s:SrcExpl_csrLine = line(".")
@@ -1228,14 +1200,14 @@ endfunction " }}}
 
 " SrcExpl_GetEditWin() {{{
 
-" Get the main editor window index
+" Get the edit window number
 
 function! <SID>SrcExpl_GetEditWin()
 
     let l:i = 1
     let l:j = 1
 
-    " Loop for searching the main editor window
+    " Loop for searching the edit window
     while 1
         " Traverse the plugin list for each sub-window
         for item in g:SrcExpl_pluginList
@@ -1314,11 +1286,11 @@ function! <SID>SrcExpl_Init()
         let s:SrcExpl_isWinOS = 0
     endif
 
-    " Have we jumped to the main editor window ?
+    " Have we jumped to the edit window ?
     let s:SrcExpl_isJumped = 0
     " Line number of the current cursor
     let s:SrcExpl_csrLine = 0
-    " The ID of main editor window
+    " The ID of edit window
     let s:SrcExpl_editWin = 0
     " The tab page number
     let s:SrcExpl_tabPage = 0
@@ -1349,12 +1321,12 @@ function! <SID>SrcExpl_Init()
         exe "set foldlevelstart=" . "99"
     endif
 
-    " We must get the ID of main editor window
+    " We must get the edit window number
     let l:tmp = <SID>SrcExpl_GetEditWin()
     " Not found
     if l:tmp < 0
-        " Can not find the main editor window
-        call <SID>SrcExpl_ReportErr("Can not Found the editor window")
+        " Can not find the edit window
+        call <SID>SrcExpl_ReportErr("Can not Found the edit window")
         return -1
     endif
     " Jump to that
