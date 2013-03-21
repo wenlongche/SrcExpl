@@ -94,13 +94,14 @@ let g:SrcExpl_updateTagsKey = "<F12>"
 
 Changelog
 =========
+```vim
 5.2
 - Add the fast way for displaying the previous or next definition in
 the jump list. The new feature is similar with the commands called cprev
 and cnext for operating the Quickfix list. You can add below config lines in
 your .vimrc or just update your Trinity to v2.1.
-    let g:SrcExpl_prevDefKey = "<F3>"
-    let g:SrcExpl_nextDefKey = "<F4>"
+    1. let g:SrcExpl_prevDefKey = "<F3>"
+    2. let g:SrcExpl_nextDefKey = "<F4>"
 - Fix a bug when clicking the default prompt line in the Source Explorer window.
 
 5.1
@@ -115,3 +116,4 @@ your .vimrc or just update your Trinity to v2.1.
 - Replaced use of preview window with a named buffer.
 - Moved to github.
 - Added documentation.
+```
