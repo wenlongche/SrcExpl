@@ -1,6 +1,6 @@
 *srcexpl.txt*	A Source code Explorer which works like the context window of "Source Insight"
 
-Version: 5.1
+Version: 5.2
 Author : Wenlong Che <wenlong.che@gmail.com>
          Jonathan Lai <laiks.jonathan@gmail.com>
 License: GNU General Public License {{{
@@ -185,6 +185,18 @@ g:SrcExpl_updateTagsKey				     *g:SrcExpl_updateTagsKey*
 
 	Default: ''
 
+g:SrcExpl_prevDefKey				        *g:SrcExpl_prevDefKey*
+	Set this variable to the key you want to use to display the previous
+	definition in the jump list.
+
+	Default: ''
+
+g:SrcExpl_nextDefKey				        *g:SrcExpl_nextDefKey*
+	Set this variable to the key you want to use to display the next
+	definition in the jump list.
+
+	Default: ''
+
 ==============================================================================
 EXAMPLES						    *srcexpl-examples*
 >
@@ -221,11 +233,17 @@ EXAMPLES						    *srcexpl-examples*
  let g:SrcExpl_isUpdateTags = 0 
  
  " // Use 'Exuberant Ctags' with '--sort=foldcase -R .' or '-L cscope.files' to 
- " //  create/update a tags file 
+ " // create/update a tags file 
  let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ." 
  
  " // Set "<F12>" key for updating the tags file artificially 
  let g:SrcExpl_updateTagsKey = "<F12>" 
+
+ " // Set "<F3>" key for displaying the previous definition in the jump list 
+ let g:SrcExpl_prevDefKey = "<F3>" 
+
+ " // Set "<F4>" key for displaying the next definition in the jump list 
+ let g:SrcExpl_nextDefKey = "<F4>" 
 <
 ==============================================================================
 TIPS								*srcexpl-tips*

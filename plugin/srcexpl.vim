@@ -9,7 +9,7 @@
 " Homepage:    http://www.vim.org/scripts/script.php?script_id=2179            "
 " GitHub:      https://github.com/wesleyche/SrcExpl                            "
 " Version:     5.2                                                             "
-" Last Change: March 12th, 2013                                                "
+" Last Change: March 21th, 2013                                                "
 " Licence:     This program is free software; you can redistribute it and / or "
 "              modify it under the terms of the GNU General Public License as  "
 "              published by the Free Software Foundation; either version 2, or "
@@ -236,6 +236,9 @@ let s:SrcExpl_isDebug = 0
 " Runing switch flag
 let s:SrcExpl_isRunning = 0
 
+" Set the highlight color
+hi SrcExpl_HighLight term=bold guifg=Black guibg=Magenta ctermfg=Black ctermbg=Magenta
+
 " }}}
 
 " SrcExpl_PrevDef() {{{
@@ -411,8 +414,8 @@ function! g:SrcExpl_Jump()
         endif
     endif
 
+    " Do not refresh when jumping to the edit window
     if g:SrcExpl_searchLocalDef != 0
-        " We have already jumped to the edit window
         let s:SrcExpl_isJumped = 1
     endif
     " Indeed go back to the edit window
@@ -491,8 +494,11 @@ function! g:SrcExpl_Refresh()
         endif
     endif
 
-    " Try to tag something
-    call <SID>SrcExpl_TagSth(l:expr)
+    " Try to tag something when necessary
+    if s:SrcExpl_symbol !=# s:SrcExpl_lastSymbol || s:SrcExpl_lastSymbol ==# ""
+        call <SID>SrcExpl_TagSth(l:expr)
+        let s:SrcExpl_lastSymbol = s:SrcExpl_symbol
+    endif
 
     return 0
 
@@ -506,6 +512,14 @@ function! <SID>SrcExpl_JumpDef(dir)
 
     " Multiple definitions
     if s:SrcExpl_status == 2
+        " Do not refresh when jumping to the edit window
+        if g:SrcExpl_searchLocalDef != 0
+            let s:SrcExpl_isJumped = 1
+        endif
+        " Indeed go back to the edit window
+        silent! exe s:SrcExpl_editWin . "wincmd w"
+        " Set the mark for recording the current position
+        call <SID>SrcExpl_SetMarkList()
         " Select the exact one and jump to its context
         call <SID>SrcExpl_SelToJump(a:dir)
         " Set the mark for recording the current position
@@ -866,34 +880,39 @@ function! <SID>SrcExpl_SelToJump(dir)
         call <SID>SrcExpl_WinGo()
     endif
 
-    if a:dir == 1 " pref def
-        if line(".") <= 2
-            let l:error = 2
-        else
+    if a:dir == 1 " Pref def
+        if line(".") <= 2 " Prompt
+            let l:error = 1
+            call cursor(1, 1)
+            call <SID>SrcExpl_MatchExpr()
+            call <SID>SrcExpl_ColorExpr()
+        else " Jump list
             call cursor(line(".") - 1, 1)
             let l:list = getline(".")
         endif
-    elseif a:dir == 2 " next def
+    elseif a:dir == 2 " Next def
         let l:temp = line(".") + 1
-        if line(".") == 1 " avoid head
+        if line(".") == 1 " Prompt
             call cursor(l:temp, 1)
             let l:list = getline(".")
-        else
+        else " Jump list
             call cursor(l:temp, 1)
             if l:temp == line(".")
                 let l:list = getline(".")
-            else " exceed the defs' max
-                let l:error = 1
+            else " Exceed the defs' max
+                let l:error = 2
             endif
         endif
-    else " normal click
+    else " Normal click
         let l:list = getline(".")
     endif
 
-    if l:error != 0
+    if l:error != 0 " Invalid
         silent! exe s:SrcExpl_editWin . "wincmd w"
         call <SID>SrcExpl_ReportErr("No more definitions")
         return
+    else " Go ahead
+        call <SID>SrcExpl_ColorLine()
     endif
 
     " Traverse the prompt string until get the file path
@@ -956,14 +975,24 @@ function! <SID>SrcExpl_SetCurrMark()
 
 endfunction " }}}
 
+" SrcExpl_ColorLine() {{{
+
+" Highlight current line
+
+function! <SID>SrcExpl_ColorLine()
+
+    " Highlight this
+    exe 'match SrcExpl_HighLight /.\%' . line(".") . 'l/'
+    redraw
+
+endfunction " }}}
+
 " SrcExpl_ColorExpr() {{{
 
 " Highlight the symbol of definition
 
 function! <SID>SrcExpl_ColorExpr()
 
-    " Set the highlight color
-    hi SrcExpl_HighLight term=bold guifg=Black guibg=Magenta ctermfg=Black ctermbg=Magenta
     " Highlight this
     exe 'match SrcExpl_HighLight "\%' . line(".") . 'l\%' .
         \ col(".") . 'c\k*"'
@@ -1353,13 +1382,13 @@ function! <SID>SrcExpl_CleanUp()
         exe "nunmap " . g:SrcExpl_updateTagsKey
     endif
 
-    " Unmap the prev-def key
+    " Unmap the previous key
     if maparg(g:SrcExpl_prevDefKey, 'n') ==
         \ ":call g:SrcExpl_PrevDef()<CR>"
         exe "nunmap " . g:SrcExpl_prevDefKey
     endif
 
-    " Unmap the next-def key
+    " Unmap the next key
     if maparg(g:SrcExpl_nextDefKey, 'n') ==
         \ ":call g:SrcExpl_NextDef()<CR>"
         exe "nunmap " . g:SrcExpl_nextDefKey
@@ -1402,6 +1431,8 @@ function! <SID>SrcExpl_Init()
     let s:SrcExpl_currMark = []
     " The key word symbol for exploring
     let s:SrcExpl_symbol = ''
+    " The last symbol for exploring
+    let s:SrcExpl_lastSymbol = ''
 
     " Auto change current work directory
     exe "set autochdir"
