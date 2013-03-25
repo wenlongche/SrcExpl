@@ -9,7 +9,7 @@
 " Homepage:    http://www.vim.org/scripts/script.php?script_id=2179            "
 " GitHub:      https://github.com/wesleyche/SrcExpl                            "
 " Version:     5.2                                                             "
-" Last Change: March 21th, 2013                                                "
+" Last Change: March 25th, 2013                                                "
 " Licence:     This program is free software; you can redistribute it and / or "
 "              modify it under the terms of the GNU General Public License as  "
 "              published by the Free Software Foundation; either version 2, or "
@@ -490,6 +490,7 @@ function! g:SrcExpl_Refresh()
     " Try to Go to local declaration
     if g:SrcExpl_searchLocalDef != 0
         if !<SID>SrcExpl_GoDecl(l:expr)
+            let s:SrcExpl_lastSymbol = s:SrcExpl_symbol
             return 0
         endif
     endif
