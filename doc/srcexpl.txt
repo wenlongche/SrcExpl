@@ -201,7 +201,7 @@ g:SrcExpl_nextDefKey				        *g:SrcExpl_nextDefKey*
 EXAMPLES						    *srcexpl-examples*
 >
  " // The switch of the Source Explorer 
- nmap <F8> :SrcExplToggle<CR>  
+ nmap <F8> :SrcExplToggle<CR> 
  
  " // Set the height of Source Explorer window 
  let g:SrcExpl_winHeight = 8 
@@ -210,7 +210,7 @@ EXAMPLES						    *srcexpl-examples*
  let g:SrcExpl_refreshTime = 100 
  
  " // Set "Enter" key to jump into the exact definition context 
- " let g:SrcExpl_jumpKey = "<ENTER>" 
+ let g:SrcExpl_jumpKey = "<ENTER>" 
  
  " // Set "Space" key for back from the definition context 
  let g:SrcExpl_gobackKey = "<SPACE>" 

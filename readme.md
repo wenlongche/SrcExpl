@@ -85,11 +85,17 @@ let g:SrcExpl_searchLocalDef = 1
 let g:SrcExpl_isUpdateTags = 0 
 
 " // Use 'Exuberant Ctags' with '--sort=foldcase -R .' or '-L cscope.files' to 
-" //  create/update a tags file 
+" // create/update the tags file 
 let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ." 
 
 " // Set "<F12>" key for updating the tags file artificially 
 let g:SrcExpl_updateTagsKey = "<F12>" 
+
+" // Set "<F3>" key for displaying the previous definition in the jump list 
+let g:SrcExpl_prevDefKey = "<F3>" 
+
+" // Set "<F4>" key for displaying the next definition in the jump list 
+let g:SrcExpl_nextDefKey = "<F4>" 
 ```
 
 Changelog
