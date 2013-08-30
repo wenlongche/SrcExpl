@@ -38,7 +38,7 @@
 " |~ \___________\||~           .-------------. |            |~ \____________\||
 " |~               |~           \______________\|            |~                |
 " +-__Tag_List__---+-demo.c----------------------------------+-_NERD_tree_-----+
-" |Source Explorer v5.2           .-----------------.                          |
+" |Source Explorer v5.3           .-----------------.                          |
 " |~                              | Source Explorer |\                         |
 " |~                              .-----------------. |                        |
 " |~                              \__________________\|                        |
@@ -216,7 +216,7 @@ let g:SrcExpl_markList = []
 let s:SrcExpl_pluginName = 'Source Explorer'
 
 " Plugin version
-let s:SrcExpl_pluginVer = 5.2
+let s:SrcExpl_pluginVer = 5.3
 
 " Buffer name
 let s:SrcExpl_bufName = 'Source_Explorer'
