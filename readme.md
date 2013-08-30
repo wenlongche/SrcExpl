@@ -101,6 +101,12 @@ let g:SrcExpl_nextDefKey = "<F4>"
 Changelog
 =========
 ```vim
+5.3
+- Fix the bug when operating the Quickfix window after closeing the
+Source Explorer window.
+- Handle the case when the cursor is located at the Quickfix window
+as same as other external plugins.
+
 5.2
 - Add the fast way for displaying the previous or next definition in
 the jump list. The new feature is similar with the commands called cprev

@@ -8,8 +8,8 @@
 "              Jonathan Lai <laiks.jonathan@gmail.com>                         "
 " Homepage:    http://www.vim.org/scripts/script.php?script_id=2179            "
 " GitHub:      https://github.com/wesleyche/SrcExpl                            "
-" Version:     5.2                                                             "
-" Last Change: March 25th, 2013                                                "
+" Version:     5.3                                                             "
+" Last Change: August 28th, 2013                                                "
 " Licence:     This program is free software; you can redistribute it and / or "
 "              modify it under the terms of the GNU General Public License as  "
 "              published by the Free Software Foundation; either version 2, or "
@@ -802,6 +802,11 @@ function! <SID>SrcExpl_AdaptPlugins()
         endif
     endfor
 
+    " Aslo filter the Quickfix window
+    if &buftype ==# "quickfix"
+        return 0
+    endif
+
     " Safe
     return 0
 
@@ -1542,10 +1547,10 @@ function! <SID>SrcExpl_Close()
             call <SID>SrcExpl_ReportErr("Not support multiple tab pages")
             return -1
         endif
-        " Close the window
-        call <SID>SrcExpl_WinClose()
         " Do the cleaning work
         call <SID>SrcExpl_CleanUp()
+        " Close the window
+        call <SID>SrcExpl_WinClose()
         " We change the flag to false
         let s:SrcExpl_isRunning = 0
     else
