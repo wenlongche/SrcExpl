@@ -67,13 +67,12 @@ let g:SrcExpl_jumpKey = "<ENTER>"
 " // Set "Space" key for back from the definition context 
 let g:SrcExpl_gobackKey = "<SPACE>" 
 
-" // In order to Avoid conflicts, the Source Explorer should know what plugins 
-" // are using buffers. And you need add their bufname into the list below 
-" // according to the command ":buffers!" 
+" // In order to avoid conflicts, the Source Explorer should know what plugins
+" // except itself are using buffers. And you need add their buffer names into
+" // below listaccording to the command ":buffers!"
 let g:SrcExpl_pluginList = [ 
         \ "__Tag_List__", 
-        \ "_NERD_tree_", 
-        \ "Source_Explorer" 
+        \ "_NERD_tree_" 
     \ ] 
 
 " // Enable/Disable the local definition searching, and note that this is not 

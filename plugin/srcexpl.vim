@@ -65,7 +65,7 @@
 " // Set "Space" key for back from the definition context                      "
 " let g:SrcExpl_gobackKey = "<SPACE>"
 "                                                                              "
-" // In order to Avoid conflicts, the Source Explorer should know what plugins "
+" // In order to avoid conflicts, the Source Explorer should know what plugins "
 " // except itself are using buffers. And you need add their buffer names into "
 " // below listaccording to the command ":buffers!"                            "
 " let g:SrcExpl_pluginList = [
