@@ -103,26 +103,18 @@ Changelog
 ```vim
 5.3
 - Fix a bug when operating the Quickfix window after closing the Source Explorer window.
-- Handle the case when the cursor is located at the Quickfix window
-as same as other external plugins.
+- Handle the case when the cursor is located at the Quickfix window as same as other external plugins.
 
 5.2
-- Add the fast way for displaying the previous or next definition in
-the jump list. The new feature is similar with the commands called cprev
-and cnext for operating the Quickfix list. You can add below config lines in
-your .vimrc or just update your Trinity to v2.1.
-    1. " // Set "<F3>" key for displaying the previous definition in the jump list 
-       let g:SrcExpl_prevDefKey = "<F3>" 
-    2. " // Set "<F4>" key for displaying the next definition in the jump list 
-       let g:SrcExpl_nextDefKey = "<F4>" 
+- Add the fast way for displaying the previous or next definition in the jump list. The new feature is similar with the commands called cprev and cnext for operating the Quickfix list. You can add below config lines in your .vimrc or just update your Trinity to v2.1.
+    1. " // Set "<F3>" key for displaying the previous definition in the jump list let g:SrcExpl_prevDefKey = "<F3>" 
+    2. " // Set "<F4>" key for displaying the next definition in the jump list let g:SrcExpl_nextDefKey = "<F4>" 
 - Fix a bug when clicking the default prompt line in the Source Explorer window.
 
 5.1
 - Added two APIs for serving other plugins:
-    1. SrcExpl_GetWin(), getting the Source Explorer window number for those
-    plugins based on multiple windows.
-    2. SrcExpl_GetVer(), getting the Source Explorer version for the forward
-    compatibility.
+    1. SrcExpl_GetWin(), getting the Source Explorer window number for those plugins based on multiple windows.
+    2. SrcExpl_GetVer(), getting the Source Explorer version for the forward compatibility.
 - Added debug/logging functions for the internal development.
 
 5.0

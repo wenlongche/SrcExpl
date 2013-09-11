@@ -9,7 +9,7 @@
 " Homepage:    http://www.vim.org/scripts/script.php?script_id=2179            "
 " GitHub:      https://github.com/wesleyche/SrcExpl                            "
 " Version:     5.3                                                             "
-" Last Change: August 28th, 2013                                                "
+" Last Change: September 10th, 2013                                            "
 " Licence:     This program is free software; you can redistribute it and / or "
 "              modify it under the terms of the GNU General Public License as  "
 "              published by the Free Software Foundation; either version 2, or "
@@ -66,12 +66,11 @@
 " let g:SrcExpl_gobackKey = "<SPACE>"
 "                                                                              "
 " // In order to Avoid conflicts, the Source Explorer should know what plugins "
-" // are using buffers. And you need add their buffer names into below list    "
-" // according to the command ":buffers!"                                      "
+" // except itself are using buffers. And you need add their buffer names into "
+" // below listaccording to the command ":buffers!"                            "
 " let g:SrcExpl_pluginList = [
 "         \ "__Tag_List__",
-"         \ "_NERD_tree_",
-"         \ "Source_Explorer"
+"         \ "_NERD_tree_"
 "     \ ]
 "                                                                              "
 " // Enable/Disable the local definition searching, and note that this is not  "
@@ -167,8 +166,7 @@ endif
 if !exists('g:SrcExpl_pluginList')
     let g:SrcExpl_pluginList = [
             \ "__Tag_List__",
-            \ "_NERD_tree_",
-            \ "Source_Explorer"
+            \ "_NERD_tree_"
         \ ]
 endif
 
@@ -922,16 +920,16 @@ function! <SID>SrcExpl_SelToJump(dir)
     endif
 
     " Traverse the prompt string until get the file path
-    while !((l:list[l:index] == ']') &&
-        \ (l:list[l:index + 1] == ':'))
+    while !((l:list[l:index] == ']')
+      \ && (l:list[l:index + 1] == ':'))
         let l:index += 1
     endwhile
     " Offset
     let l:index += 3
 
     " Get the whole file path of the exact definition
-    while !((l:list[l:index] == ' ') &&
-        \ (l:list[l:index + 1] == '['))
+    while !((l:list[l:index] == ' ')
+      \ && (l:list[l:index + 1] == '['))
         let l:fpath = l:fpath . l:list[l:index]
         let l:index += 1
     endwhile
@@ -939,8 +937,8 @@ function! <SID>SrcExpl_SelToJump(dir)
     let l:index += 2
 
     " Traverse the prompt string until get the symbol
-    while !((l:list[l:index] == ']') &&
-        \ (l:list[l:index + 1] == ':'))
+    while !((l:list[l:index] == ']')
+      \ && (l:list[l:index + 1] == ':'))
         let l:index += 1
     endwhile
     " Offset
@@ -1338,16 +1336,21 @@ function! <SID>SrcExpl_GetEditWin()
                 let l:j += 1
             endif
         endfor
-        " We've found one
+
         if j >= len(g:SrcExpl_pluginList)
+          \ && getbufvar(winbufnr(l:i), '&buftype') !=# "quickfix"
+            " We've found one
             return l:i
         else
             let l:i += 1
-            let l:j = 0
         endif
-        " Not found finally
+
         if l:i > winnr("$")
+            " Not found
             return -1
+        else
+            " Try the next one
+            let l:j = 0
         endif
     endwhile
 
@@ -1461,10 +1464,10 @@ function! <SID>SrcExpl_Init()
     " Not found
     if l:tmp < 0
         " Can not find the edit window
-        call <SID>SrcExpl_ReportErr("Can not Found the edit window")
+        call <SID>SrcExpl_ReportErr("Edit Window Not Found")
         return -1
     endif
-    " Jump to that
+    " Jump to the edit window
     silent! exe l:tmp . "wincmd w"
 
     if g:SrcExpl_isUpdateTags != 0
