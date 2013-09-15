@@ -1,6 +1,6 @@
 *srcexpl.txt*	A Source code Explorer which works like the context window of "Source Insight"
 
-Version: 5.2
+Version: 5.3
 Author : Wenlong Che <wenlong.che@gmail.com>
          Jonathan Lai <laiks.jonathan@gmail.com>
 License: GNU General Public License {{{
@@ -125,13 +125,12 @@ g:SrcExpl_pluginList					*g:SrcExpl_pluginList*
 	" Example
 	let g:SrcExpl_pluginList = [
 		    \ "__Tag_List__",
-		    \ "NERD_tree_1",
-		    \ "Source_Explorer",
+		    \ "_NERD_tree_",
 		    \ "*unite*"
 		    \ ]
 <
 
-	Default: [ "__Tag_List__", "_NERD_tree_", "Source_Explorer" ]
+	Default: [ "__Tag_List__", "_NERD_tree_" ]
 
 g:SrcExpl_searchLocalDef			    *g:SrcExpl_searchLocalDef*
 	This enables local definition searching. Source Explorer can use vim's
@@ -215,13 +214,12 @@ EXAMPLES						    *srcexpl-examples*
  " // Set "Space" key for back from the definition context 
  let g:SrcExpl_gobackKey = "<SPACE>" 
  
- " // In order to Avoid conflicts, the Source Explorer should know what plugins 
- " // are using buffers. And you need add their bufname into the list below 
- " // according to the command ":buffers!" 
+ " // In order to avoid conflicts, the Source Explorer should know what plugins 
+ " // except itself are using buffers. And you need add their buffer names into 
+ " // below listaccording to the command ":buffers!" 
  let g:SrcExpl_pluginList = [ 
          \ "__Tag_List__", 
-         \ "_NERD_tree_", 
-         \ "Source_Explorer" 
+         \ "_NERD_tree_" 
      \ ] 
  
  " // Enable/Disable the local definition searching, and note that this is not 
@@ -310,7 +308,7 @@ shows my work platform with Trinity.
  |~ \___________\||~           .-------------. |            |~ \____________\||
  |~               |~           \______________\|            |~                |
  +-__Tag_List__---+-demo.c----------------------------------+-_NERD_tree_-----+
- |Source Explorer v5.1           .-----------------.                          |
+ |Source Explorer v5.3           .-----------------.                          |
  |~                              | Source Explorer |\                         |
  |~                              .-----------------. |                        |
  |~                              \__________________\|                        |
@@ -328,18 +326,33 @@ https://github.com/wesleyche/SrcExpl
 ==============================================================================
 CHANGELOG						   *srcexpl-changelog*
 
+5.3
+- Fix a bug when operating the Quickfix window after closing the Source Explorer window.
+- Handle the case when the cursor is located at the Quickfix window as same as other
+  external plugins.
+
+5.2
+- Add the fast way for displaying the previous or next definition in the jump list.
+  The new feature is similar with the commands called cprev and cnext for operating
+  the Quickfix list. You can add below config lines in your .vimrc or just update your
+  Trinity to v2.1.
+    1. " // Set "<F3>" key for displaying the previous definition in the jump list 
+       let g:SrcExpl_prevDefKey = "<F3>" 
+    2. " // Set "<F4>" key for displaying the next definition in the jump list 
+       let g:SrcExpl_nextDefKey = "<F4>" 
+- Fix a bug when clicking the default prompt line in the Source Explorer window.
+
+5.1
+- Added two APIs for serving other plugins:
+    1. SrcExpl_GetWin(), getting the Source Explorer window number for those plugins
+       based on multiple windows.
+    2. SrcExpl_GetVer(), getting the Source Explorer version for the forward compatibility.
+- Added debug/logging functions for the internal development.
+
 5.0
 - Replaced use of preview window with a named buffer.
 - Moved to github.
 - Added documentation.
-
-5.1
-- Added two APIs for serving other plugins:
-    1. SrcExpl_GetWin(), getting the Source Explorer window number for those
-    plugins based on multiple windows.
-    2. SrcExpl_GetVer(), getting the Source Explorer version for the forward
-    compatibility.
-- Added debug/logging functions for the internal development.
 
 ==============================================================================
 vim:tw=78:ts=8:noet:ft=help:
