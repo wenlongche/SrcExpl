@@ -1,4 +1,3 @@
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                                                              "
 " Plugin Name: SrcExpl (Source Explorer)                                       "
@@ -1454,7 +1453,7 @@ function! <SID>SrcExpl_Init()
     " Open all the folds
     if has("folding")
         " Open this file at first
-        exe "normal " . "zR"
+        exe "normal! " . "zR"
         " Let it works during the whole editing session
         exe "set foldlevelstart=" . "99"
     endif
