@@ -1495,8 +1495,12 @@ function! <SID>SrcExpl_Init()
     " Then we set the routine function when the event happens
     augroup SrcExpl_AutoCmd
         autocmd!
-        au! CursorHold * nested call g:SrcExpl_Refresh()
-        au! WinEnter * nested call <SID>SrcExpl_WinEnter()
+
+        " Remove below line emptly
+        "au! CursorHold * nested call g:SrcExpl_Refresh()
+        "au! WinEnter * nested call <SID>SrcExpl_WinEnter()
+        au! CursorHold * call g:SrcExpl_Refresh()
+        au! WinEnter * call <SID>SrcExpl_WinEnter()
     augroup end
 
     return 0
