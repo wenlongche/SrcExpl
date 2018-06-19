@@ -1,6 +1,6 @@
-*srcexpl.txt*	A Source code Explorer which works like the context window of "Source Insight"
+*srcexpl.txt*	A Source code Explorer for viewing definition(s) and contextual info
 
-Version: 5.3
+Version: 6.0
 Author : Wenlong Che <wenlong.che@gmail.com>
          Jonathan Lai <laiks.jonathan@gmail.com>
 License: GNU General Public License {{{
@@ -33,21 +33,18 @@ INTRODUCTION						*srcexpl-introduction*
 SrcExpl (Source Explorer) is a source code explorer that provides context for
 the currently selected keyword by displaying the function or type definition
 or declaration in a separate window. This plugin aims to recreate the context
-window available in the IDE known as "Source Insight".
+window available in the IDE.
 
-The behaviour of the Source Explorer window is similar to that of "Source
-Insight". Placing your cursor on a function name in Normal Mode will cause its
+For example, placing your cursor on a function name in Normal Mode will cause its
 definition to be displayed in the Source Explorer window. Double-clicking the
-definition will cause the edit window to jump to the definition. In addition,
-listing multiple definitions and jumping work in a similar fashion to
-"Source Insight".
+definition will cause the edit window to jump to the definition.
 
 Source Explorer uses ctags to track keywords and can automatically create and
 update the generated tags file for you.
 
 Source Explorer is designed to work with other plugins like 'The NERD tree'
-and 'taglist' to further recreate a "Source Insight"-like environment or to
-work in your own configuration.
+and 'taglist' to further recreate a IDE-like environment or to work in your
+own configuration.
 
 ------------------------------------------------------------------------------
 FEATURES						    *srcexpl-features*
@@ -124,19 +121,53 @@ g:SrcExpl_pluginList					*g:SrcExpl_pluginList*
 >
 	" Example
 	let g:SrcExpl_pluginList = [
-		    \ "__Tag_List__",
-		    \ "_NERD_tree_",
-		    \ "*unite*"
-		    \ ]
+		\ "__Tag_List__",
+		\ "_NERD_tree_",
+		\ "Source_Explorer",
+		\ "*unite*"
+	    \ ]
 <
 
-	Default: [ "__Tag_List__", "_NERD_tree_" ]
+	Default: [ "__Tag_List__", "_NERD_tree_", "Source_Explorer" ]
+
+g:SrcExpl_colorSchemeList					*g:SrcExpl_colorSchemeList*
+	This list contains the color schemes used by Source Explorer. Source Explorer
+	supports five color schemes for now - Red, Cyan, Green, Yellow and Magenta.
+	Source Explorer will pick up one of them randomly when initialization. The benefit
+	is that the user is able to easily identify the specific window by the color
+	when there are multi-windows open at the same time. At the very minimum
+        it must include one color scheme, e.g. Magenta (legacy color)
+>
+	" Minimum Color Scheme List
+	let g:SrcExpl_colorSchemeList = [ "Magenta" ]
+<
+>
+	" Example
+	let g:SrcExpl_colorSchemeList = [
+    	        \ "Red",
+    	        \ "Cyan",
+    	        \ "Green",
+    	        \ "Yellow",
+    	        \ "Magenta"
+    	    \ ]
+<
+
+	Default: [ "Red", "Cyan", "Green", "Yellow", "Magenta" ]
 
 g:SrcExpl_searchLocalDef			    *g:SrcExpl_searchLocalDef*
 	This enables local definition searching. Source Explorer can use vim's
 	local definition search in addition to ctags to find definitions.
 	However, this is not guaranteed to work. See the vim documentation for
 	|gd| for more details.
+
+	Default: 1
+
+g:SrcExpl_nestedAutoCmd				      *g:SrcExpl_nestedAutoCmd*
+	This enables the "nested" option for those autocommands that makes 
+	syntax highlighting work.
+	Acutally, disabling this flag is a workaround for Vim bug 
+	https://goo.gl/TLPK4K. Those plugins using autocmd for BufReadPre might
+	have conflicts with Source Explorer. e.g. YCM, Syntastic etc.
 
 	Default: 1
 
@@ -200,7 +231,7 @@ g:SrcExpl_nextDefKey				        *g:SrcExpl_nextDefKey*
 EXAMPLES						    *srcexpl-examples*
 >
  " // The switch of the Source Explorer 
- nmap <F8> :SrcExplToggle<CR> 
+ nmap <F8> :SrcExplToggle<CR>  
  
  " // Set the height of Source Explorer window 
  let g:SrcExpl_winHeight = 8 
@@ -214,22 +245,38 @@ EXAMPLES						    *srcexpl-examples*
  " // Set "Space" key for back from the definition context 
  let g:SrcExpl_gobackKey = "<SPACE>" 
  
- " // In order to avoid conflicts, the Source Explorer should know what plugins 
- " // except itself are using buffers. And you need add their buffer names into 
- " // below listaccording to the command ":buffers!" 
+ " // In order to Avoid conflicts, the Source Explorer should know what plugins 
+ " // are using buffers. And you need add their bufname into the list below 
+ " // according to the command ":buffers!" 
  let g:SrcExpl_pluginList = [ 
          \ "__Tag_List__", 
-         \ "_NERD_tree_" 
-     \ ] 
- 
+         \ "_NERD_tree_", 
+         \ "Source_Explorer" 
+     \ ]
+
+ " The color schemes used by Source Explorer. There are five color schemes
+ " supported for now - Red, Cyan, Green, Yellow and Magenta.
+ " Source Explorer will pick up one of them randomly when initialization 
+ let g:SrcExpl_colorSchemeList = [
+         \ "Red",
+         \ "Cyan",
+         \ "Green",
+         \ "Yellow",
+         \ "Magenta"
+     \ ]
+
  " // Enable/Disable the local definition searching, and note that this is not 
  " // guaranteed to work, the Source Explorer doesn't check the syntax for now. 
  " // It only searches for a match with the keyword according to command 'gd' 
  let g:SrcExpl_searchLocalDef = 1 
  
+ " // Workaround for Vim bug @https://goo.gl/TLPK4K as any plugins using autocmd for
+ " // BufReadPre might have conflicts with Source Explorer. e.g. YCM, Syntastic etc.
+ let g:SrcExpl_nestedAutoCmd = 1
+
  " // Do not let the Source Explorer update the tags file when opening 
- let g:SrcExpl_isUpdateTags = 0 
- 
+ let g:SrcExpl_isUpdateTags = 0
+
  " // Use 'Exuberant Ctags' with '--sort=foldcase -R .' or '-L cscope.files' to 
  " // create/update a tags file 
  let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ." 
@@ -287,9 +334,9 @@ key mappings for jumping between windows and using Source Explorer:
 <
 
 							     *srcexpl-trinity*
-4. If you want to set up vim to work more like Source Insight, you can try a
-vim plugin named Trinity (trinity.vim) available at: 
-http://www.vim.org/scripts/script.php?script_id=2347
+4. If you want to set up vim to work more like IDE, you can try a vim plugin
+named Trinity (trinity.vim) available at: 
+https://www.vim.org/scripts/script.php?script_id=2347
 
 The Trinity plugin manages Source Explorer, Taglist and NERD Tree. The below
 shows my work platform with Trinity.
@@ -308,7 +355,7 @@ shows my work platform with Trinity.
  |~ \___________\||~           .-------------. |            |~ \____________\||
  |~               |~           \______________\|            |~                |
  +-__Tag_List__---+-demo.c----------------------------------+-_NERD_tree_-----+
- |Source Explorer v5.3           .-----------------.                          |
+ |Source Explorer v6.0           .-----------------.                          |
  |~                              | Source Explorer |\                         |
  |~                              .-----------------. |                        |
  |~                              \__________________\|                        |
@@ -325,6 +372,15 @@ https://github.com/wesleyche/SrcExpl
 
 ==============================================================================
 CHANGELOG						   *srcexpl-changelog*
+
+6.0
+- Add color scheme feature - The user is able to easily identify the specific
+  window by the color used for highlight when there are multi-windows open
+  at the same time.
+- Add a workaround for Vim bug @https://goo.gl/TLPK4K as any plugins using
+  autocmd for BufReadPre might have conflicts with Source Explorer. e.g. YCM,
+  Syntastic etc. - https://github.com/wesleyche/SrcExpl/issues/6
+- Bug fix - https://github.com/wesleyche/SrcExpl/issues/4
 
 5.3
 - Fix a bug when operating the Quickfix window after closing the Source Explorer window.

@@ -1,102 +1,118 @@
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                                                              "
-" Plugin Name: SrcExpl (Source Explorer)                                       "
-" Abstract:    A (G)Vim plugin for exploring the source code based on "tags",  "
-"              and it works like the context window of "Source Insight".       "
-" Authors:     Wenlong Che <wenlong.che@gmail.com>                             "
-"              Jonathan Lai <laiks.jonathan@gmail.com>                         "
-" Homepage:    http://www.vim.org/scripts/script.php?script_id=2179            "
-" GitHub:      https://github.com/wesleyche/SrcExpl                            "
-" Version:     5.3                                                             "
-" Last Change: September 10th, 2013                                            "
-" Licence:     This program is free software; you can redistribute it and / or "
-"              modify it under the terms of the GNU General Public License as  "
-"              published by the Free Software Foundation; either version 2, or "
-"              any later version.                                              "
-"                                                                              "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                                                                      "
+" Plugin Name:         SrcExpl (Source Explorer)                                       "
+" Abstract:            A (G)Vim plugin for exploring the source code definition(s) and "
+"                      contextual lines with a split window.                           "
+" Authors:             Wenlong Che <wenlong.che@gmail.com>                             "
+"                      Jonathan Lai <laiks.jonathan@gmail.com>                         "
+" Homepage:            https://www.vim.org/scripts/script.php?script_id=2179           "
+" GitHub Repositories: https://www.github.com/wesleyche/SrcExpl                        "
+" Github Contributors: bamoqi, micbou                                                  "
+" Version:             6.0                                                             "
+" Last Change:         June 18th, 2018                                                 "
+" Licence:             This program is free software; you can redistribute it and / or "
+"                      modify it under the terms of the GNU General Public License as  "
+"                      published by the Free Software Foundation; either version 2, or "
+"                      any later version.                                              "
+"                                                                                      "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" NOTE: Below graph shows my work platform with some Vim plugins,              "
-"       including 'Source Explorer', 'Taglist' and 'NERD tree'. And I usually  "
-"       use my another plugin called 'trinity.vim' to manage them.             "
-"                                                                              "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NOTE: Below graph shows my work platform with some Vim plugins, including            "
+"       'Source Explorer', 'Taglist' and 'NERD tree'. And I usually use my another     "
+"       plugin called 'trinity.vim' to manage them.                                    "
+"                                                                                      "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" +------------------------------------------------------------------------------------+
+" | File  Edit  Tools  Syntax  Buffers  Window  Help                                   |
+" +----------------+-------------------------------------------------+-----------------+
+" |-demo.c---------|                                                 |-/home/myprj/----|
+" |function        | 1 void foo(void)     /* function 1 */           ||~ src/          |
+" |  foo           | 2 {                                             || `-demo.c       |
+" |  bar           | 3 }                                             |`-tags           |
+" |                | 4 void bar(void)     /* function 2 */           |                 |
+" |~ .----------.  | 5 {                                             |~ .-----------.  |
+" |~ | Tag List |\ | 6 }            .-------------.                  |~ | NERD Tree |\ |
+" |~ .----------. ||~               | Edit Window |\                 |~ .-----------. ||
+" |~ \___________\||~               .-------------. |                |~ \____________\||
+" |~               |~               \______________\|                |~                |
+" +-__Tag_List__---+-demo.c------------------------------------------+-_NERD_tree_-----+
+" |Source Explorer v6.0               .-----------------.                              |
+" |~                                  | Source Explorer |\                             |
+" |~                                  .-----------------. |                            |
+" |~                                  \__________________\|                            |
+" |-Source_Explorer--------------------------------------------------------------------|
+" |:TrinityToggleAll                                                                   |
+" +------------------------------------------------------------------------------------+
 
-" +----------------------------------------------------------------------------+
-" | File  Edit  Tools  Syntax  Buffers  Window  Help                           |
-" +----------------+-----------------------------------------+-----------------+
-" |-demo.c---------|                                         |-/home/myprj/----|
-" |function        | 1 void foo(void)     /* function 1 */   ||~ src/          |
-" |  foo           | 2 {                                     || `-demo.c       |
-" |  bar           | 3 }                                     |`-tags           |
-" |                | 4 void bar(void)     /* function 2 */   |                 |
-" |~ .----------.  | 5 {                                     |~ .-----------.  |
-" |~ | Tag List |\ | 6 }        .-------------.              |~ | NERD Tree |\ |
-" |~ .----------. ||~           | Edit Window |\             |~ .-----------. ||
-" |~ \___________\||~           .-------------. |            |~ \____________\||
-" |~               |~           \______________\|            |~                |
-" +-__Tag_List__---+-demo.c----------------------------------+-_NERD_tree_-----+
-" |Source Explorer v5.3           .-----------------.                          |
-" |~                              | Source Explorer |\                         |
-" |~                              .-----------------. |                        |
-" |~                              \__________________\|                        |
-" |-Source_Explorer------------------------------------------------------------|
-" |:TrinityToggleAll                                                           |
-" +----------------------------------------------------------------------------+
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                                                              "
-" The_setting_example_in_my_vimrc_file:-)                                      "
-"                                                                              "
-" // The switch of the Source Explorer                                         "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                                                                      "
+" The_setting_example_in_my_vimrc_file:-)                                              "
+"                                                                                      "
+" // The switch of the Source Explorer                                                 "
 " nmap <F8> :SrcExplToggle<CR>
-"                                                                              "
-" // Set the height of Source Explorer window                                  "
+"                                                                                      "
+" // Set the height of Source Explorer window                                          "
 " let g:SrcExpl_winHeight = 8
-"                                                                              "
-" // Set 100 ms for refreshing the Source Explorer                             "
+"                                                                                      "
+" // Set 100 ms for refreshing the Source Explorer                                     "
 " let g:SrcExpl_refreshTime = 100
-"                                                                              "
-" // Set "Enter" key to jump into the exact definition context                 "
+"                                                                                      "
+" // Set "Enter" key to jump into the exact definition context                         "
 " let g:SrcExpl_jumpKey = "<ENTER>"
-"                                                                              "
-" // Set "Space" key for back from the definition context                      "
+"                                                                                      "
+" // Set "Space" key for back from the definition context                              "
 " let g:SrcExpl_gobackKey = "<SPACE>"
-"                                                                              "
-" // In order to avoid conflicts, the Source Explorer should know what plugins "
-" // except itself are using buffers. And you need add their buffer names into "
-" // below listaccording to the command ":buffers!"                            "
+"                                                                                      "
+" // In order to avoid conflicts, the Source Explorer should know what plugins except  "
+" // itself are using buffers. And you need add their buffer names into below list     "
+" // according to the command ":buffers!"                                              "
 " let g:SrcExpl_pluginList = [
 "         \ "__Tag_List__",
-"         \ "_NERD_tree_"
+"         \ "_NERD_tree_",
+"         \ "Source_Explorer"
 "     \ ]
-"                                                                              "
-" // Enable/Disable the local definition searching, and note that this is not  "
-" // guaranteed to work, the Source Explorer doesn't check the syntax for now. "
-" // It only searches for a match with the keyword according to command 'gd'   "
+"                                                                                      "
+" // The color schemes used by Source Explorer. There are five color schemes           "
+" // supported for now - Red, Cyan, Green, Yellow and Magenta. Source Explorer         "
+" // will pick up one of them randomly when initialization.                            "
+" let g:SrcExpl_colorSchemeList = [
+"         \ "Red",
+"         \ "Cyan",
+"         \ "Green",
+"         \ "Yellow",
+"         \ "Magenta"
+"     \ ]
+"                                                                                      "
+" // Enable/Disable the local definition searching, and note that this is not          "
+" // guaranteed to work, the Source Explorer doesn't check the syntax for now.         "
+" // It only searches for a match with the keyword according to command 'gd'           "
 " let g:SrcExpl_searchLocalDef = 1
-"                                                                              "
-" // Do not let the Source Explorer update the tags file when opening          "
+"                                                                                      "
+" // Workaround for Vim bug @https://goo.gl/TLPK4K as any plugins using autocmd for    "
+" // BufReadPre might have conflicts with Source Explorer. e.g. YCM, Syntastic etc.    "
+" let g:SrcExpl_nestedAutoCmd = 1
+"                                                                                      "
+" // Do not let the Source Explorer update the tags file when opening                  "
 " let g:SrcExpl_isUpdateTags = 0
-"                                                                              "
-" // Use 'Exuberant Ctags' with '--sort=foldcase -R .' or '-L cscope.files' to "
-" //  create/update a tags file                                                "
+"                                                                                      "
+" // Use 'Exuberant Ctags' with '--sort=foldcase -R .' or '-L cscope.files' to         "
+" // create/update a tags file                                                         "
 " let g:SrcExpl_updateTagsCmd = "ctags --sort=foldcase -R ."
-"                                                                              "
-" // Set "<F12>" key for updating the tags file artificially                   "
+"                                                                                      "
+" // Set "<F12>" key for updating the tags file artificially                           "
 " let g:SrcExpl_updateTagsKey = "<F12>"
-"                                                                              "
-" // Set "<F3>" key for displaying the previous definition in the jump list    "
+"                                                                                      "
+" // Set "<F3>" key for displaying the previous definition in the jump list            "
 " let g:SrcExpl_prevDefKey = "<F3>"
-"                                                                              "
-" // Set "<F4>" key for displaying the next definition in the jump list        "
+"                                                                                      "
+" // Set "<F4>" key for displaying the next definition in the jump list                "
 " let g:SrcExpl_nextDefKey = "<F4>"
-"                                                                              "
-" Just_change_above_of_them_by_yourself:-)                                     "
-"                                                                              "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                                                                      "
+" Just_change_above_of_them_by_yourself:-)                                             "
+"                                                                                      "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Avoid reloading {{{
 
@@ -166,7 +182,19 @@ endif
 if !exists('g:SrcExpl_pluginList')
     let g:SrcExpl_pluginList = [
             \ "__Tag_List__",
-            \ "_NERD_tree_"
+            \ "_NERD_tree_",
+            \ "Source_Explorer"
+        \ ]
+endif
+
+" User interface for configuring the color schemes
+if !exists('g:SrcExpl_colorSchemeList')
+    let g:SrcExpl_colorSchemeList = [
+            \ "Red",
+            \ "Cyan",
+            \ "Green",
+            \ "Yellow",
+            \ "Magenta"
         \ ]
 endif
 
@@ -174,6 +202,12 @@ endif
 " according to command 'gd'
 if !exists('g:SrcExpl_searchLocalDef')
     let g:SrcExpl_searchLocalDef = 1
+endif
+
+" User interface to control if use option 'nested' for setting
+" AutoCmds, 0 for false, others for true
+if !exists('g:SrcExpl_nestedAutoCmd')
+    let g:SrcExpl_nestedAutoCmd = 1
 endif
 
 " User interface to control if update the 'tags' file when loading
@@ -214,13 +248,16 @@ let g:SrcExpl_markList = []
 let s:SrcExpl_pluginName = 'Source Explorer'
 
 " Plugin version
-let s:SrcExpl_pluginVer = 5.3
+let s:SrcExpl_pluginVer = 6.0
 
 " Buffer name
 let s:SrcExpl_bufName = 'Source_Explorer'
 
 " Window name
 let s:SrcExpl_winName = 'SrcExpl'
+
+" Color scheme
+let s:SrcExpl_colorScheme = ''
 
 " Window variable
 let s:SrcExpl_winVar = -1
@@ -234,8 +271,12 @@ let s:SrcExpl_isDebug = 0
 " Runing switch flag
 let s:SrcExpl_isRunning = 0
 
-" Set the highlight color
-hi SrcExpl_HighLight term=bold guifg=Black guibg=Magenta ctermfg=Black ctermbg=Magenta
+" Set the highlight colors
+hi SrcExpl_HighLight_Red term=bold guifg=Black guibg=#FF7272 ctermfg=Black ctermbg=Red
+hi SrcExpl_HighLight_Cyan term=bold guifg=Black guibg=#8CCBEA ctermfg=Black ctermbg=Cyan
+hi SrcExpl_HighLight_Green term=bold guifg=Black guibg=#A4E57E ctermfg=Black ctermbg=Green
+hi SrcExpl_HighLight_Yellow term=bold guifg=Black guibg=#FFDB72 ctermfg=Black ctermbg=Yellow
+hi SrcExpl_HighLight_Magenta term=bold guifg=Black guibg=#FFB3FF ctermfg=Black ctermbg=Magenta
 
 " }}}
 
@@ -457,7 +498,7 @@ endfunction " }}}
 
 " Refresh the Source Explorer window and update the status
 
-function! g:SrcExpl_Refresh()
+function! <SID>SrcExpl_Refresh()
 
     " Tab page must be invalid
     if s:SrcExpl_tabPage != tabpagenr()
@@ -666,7 +707,7 @@ function! <SID>SrcExpl_WinPrompt(prompt)
         1,$d _
         " Go to the end of the buffer put the buffer list
         $
-        " Display the version of the Source Explorer
+        " Display the prompt info
         put! = a:prompt
         " Cancel all the highlighted words
         match none
@@ -674,6 +715,8 @@ function! <SID>SrcExpl_WinPrompt(prompt)
         $ d _
         " Make it unmodifiable again
         setlocal nomodifiable
+        " Highlight the prompt info
+        call <SID>SrcExpl_ColorLine()
         " Go back to the edit window
         silent! exe s:SrcExpl_editWin . "wincmd w"
     endif
@@ -986,7 +1029,7 @@ endfunction " }}}
 function! <SID>SrcExpl_ColorLine()
 
     " Highlight this
-    exe 'match SrcExpl_HighLight /.\%' . line(".") . 'l/'
+    exe 'match SrcExpl_HighLight_' . s:SrcExpl_colorScheme . ' /.\%' . line(".") . 'l/'
     redraw
 
 endfunction " }}}
@@ -998,7 +1041,7 @@ endfunction " }}}
 function! <SID>SrcExpl_ColorExpr()
 
     " Highlight this
-    exe 'match SrcExpl_HighLight "\%' . line(".") . 'l\%' .
+    exe 'match SrcExpl_HighLight_' . s:SrcExpl_colorScheme . ' "\%' . line(".") . 'l\%' .
         \ col(".") . 'c\k*"'
 
 endfunction " }}}
@@ -1442,6 +1485,10 @@ function! <SID>SrcExpl_Init()
     let s:SrcExpl_symbol = ''
     " The last symbol for exploring
     let s:SrcExpl_lastSymbol = ''
+    " The color scheme creates randomly
+    let s:SrcExpl_colorScheme =
+      \ g:SrcExpl_colorSchemeList[matchstr(reltimestr(reltime()),
+           \ '\v\.@<=\d+')[1:] % len(g:SrcExpl_colorSchemeList)]
 
     " Auto change current work directory
     exe "set autochdir"
@@ -1454,7 +1501,7 @@ function! <SID>SrcExpl_Init()
     " Open all the folds
     if has("folding")
         " Open this file at first
-        exe "normal " . "zR"
+        exe "normal! " . "zR"
         " Let it works during the whole editing session
         exe "set foldlevelstart=" . "99"
     endif
@@ -1495,9 +1542,18 @@ function! <SID>SrcExpl_Init()
     " Then we set the routine function when the event happens
     augroup SrcExpl_AutoCmd
         autocmd!
-        au! CursorHold * nested call g:SrcExpl_Refresh()
-        au! WinEnter * nested call <SID>SrcExpl_WinEnter()
+        au! WinEnter * call <SID>SrcExpl_WinEnter()
     augroup end
+
+    if g:SrcExpl_nestedAutoCmd != 0
+        augroup SrcExpl_AutoCmd
+            au! CursorHold * nested call <SID>SrcExpl_Refresh()
+        augroup end
+    else
+        augroup SrcExpl_AutoCmd
+            au! CursorHold * call <SID>SrcExpl_Refresh()
+        augroup end
+    endif
 
     return 0
 
@@ -1605,9 +1661,9 @@ unlet s:save_cpo
 
 " }}}
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                                                              "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                                                                      "
 " vim:foldmethod=marker:tabstop=4
-"                                                                              "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                                                                      "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 

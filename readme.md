@@ -1,10 +1,10 @@
 **SrcExpl**
 ===========
 
-SrcExpl (Source Explorer) is a source code explorer that provides context for the currently
-selected keyword by displaying the function or type definition or declaration
-in a separate window. This plugin aims to recreate the context window available
-in the IDE known as "Source Insight".
+SrcExpl (Source Explorer) is a source code explorer that provides context for
+the currently selected keyword by displaying the function or type definition
+or declaration in a separate window. This plugin aims to recreate the context
+window available in the IDE.
 
 Features
 ========
@@ -67,18 +67,34 @@ let g:SrcExpl_jumpKey = "<ENTER>"
 " // Set "Space" key for back from the definition context 
 let g:SrcExpl_gobackKey = "<SPACE>" 
 
-" // In order to avoid conflicts, the Source Explorer should know what plugins
-" // except itself are using buffers. And you need add their buffer names into
-" // below listaccording to the command ":buffers!"
-let g:SrcExpl_pluginList = [ 
-        \ "__Tag_List__", 
-        \ "_NERD_tree_" 
-    \ ] 
+" // In order to avoid conflicts, the Source Explorer should know what plugins except
+" // itself are using buffers. And you need add their buffer names into below list
+" // according to the command ":buffers!"
+let g:SrcExpl_pluginList = [
+        \ "__Tag_List__",
+        \ "_NERD_tree_",
+        \ "Source_Explorer"
+    \ ]
+
+" // The color schemes used by Source Explorer. There are five color schemes
+" // supported for now - Red, Cyan, Green, Yellow and Magenta. Source Explorer
+" // will pick up one of them randomly when initialization.
+let g:SrcExpl_colorSchemeList = [
+        \ "Red",
+        \ "Cyan",
+        \ "Green",
+        \ "Yellow",
+        \ "Magenta"
+    \ ]
 
 " // Enable/Disable the local definition searching, and note that this is not 
 " // guaranteed to work, the Source Explorer doesn't check the syntax for now. 
 " // It only searches for a match with the keyword according to command 'gd' 
 let g:SrcExpl_searchLocalDef = 1 
+
+" // Workaround for Vim bug @https://goo.gl/TLPK4K as any plugins using autocmd for
+" // BufReadPre might have conflicts with Source Explorer. e.g. YCM, Syntastic etc.
+let g:SrcExpl_nestedAutoCmd = 1
 
 " // Do not let the Source Explorer update the tags file when opening 
 let g:SrcExpl_isUpdateTags = 0 
@@ -100,6 +116,15 @@ let g:SrcExpl_nextDefKey = "<F4>"
 Changelog
 =========
 ```vim
+6.0
+- Add color scheme feature - The user is able to easily identify the specific
+  window by the color used for highlight when there are multi-windows open
+  at the same time.
+- Add a workaround for Vim bug @https://goo.gl/TLPK4K as any plugins using
+  autocmd for BufReadPre might have conflicts with Source Explorer. e.g. YCM,
+  Syntastic etc. - https://github.com/wesleyche/SrcExpl/issues/6
+- Bug fix - https://github.com/wesleyche/SrcExpl/issues/
+
 5.3
 - Fix a bug when operating the Quickfix window after closing the Source Explorer window.
 - Handle the case when the cursor is located at the Quickfix window as same as other
