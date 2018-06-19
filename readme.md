@@ -123,7 +123,7 @@ Changelog
 - Add a workaround for Vim bug @https://goo.gl/TLPK4K as any plugins using
   autocmd for BufReadPre might have conflicts with Source Explorer. e.g. YCM,
   Syntastic etc. - https://github.com/wesleyche/SrcExpl/issues/6
-- Bug fix - https://github.com/wesleyche/SrcExpl/issues/
+- Bug fix - https://github.com/wesleyche/SrcExpl/issues/4
 
 5.3
 - Fix a bug when operating the Quickfix window after closing the Source Explorer window.
