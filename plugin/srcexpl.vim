@@ -346,7 +346,7 @@ endfunction " }}}
 function! g:SrcExpl_UpdateTags()
 
     " Go to the current work directory
-    silent! exe "cd " . expand('%:p:h')
+    silent! exe "cd " . `pwd`
     " Get the amount of all files named 'tags'
     let l:tmp = len(tagfiles())
 
@@ -1490,8 +1490,6 @@ function! <SID>SrcExpl_Init()
       \ g:SrcExpl_colorSchemeList[matchstr(reltimestr(reltime()),
            \ '\v\.@<=\d+')[1:] % len(g:SrcExpl_colorSchemeList)]
 
-    " Auto change current work directory
-    exe "set autochdir"
     " Let Vim find the possible tags file
     exe "set tags=tags;"
     " Set the actual update time according to user's requirement
