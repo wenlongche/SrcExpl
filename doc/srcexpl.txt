@@ -189,6 +189,13 @@ g:SrcExpl_updateTagsCmd				     *g:SrcExpl_updateTagsCmd*
 
 	Default: "ctags --sort=foldcase -R ."
 
+g:SrcExpl_tagsPath                                       *g:SrcExpl_tagsPath*
+	This is the path which Source Explorer will attempt to load tags. It
+	can be either relative path or absolute path.
+
+	Default: "tags"
+
+
 ------------------------------------------------------------------------------
 KEY MAPPINGS						*srcexpl-key-mappings*
 
