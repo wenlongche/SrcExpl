@@ -524,6 +524,10 @@ function! <SID>SrcExpl_Refresh()
         return -4
     endif
 
+	if bufname("%") == "__Tag_List__"
+			return -5
+	endif
+
     let l:expr = '\<' . s:SrcExpl_symbol . '\>' . '\C'
 
     " Try to Go to local declaration
